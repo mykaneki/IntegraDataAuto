@@ -4,12 +4,11 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.actions import interaction
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
-from appium.webdriver.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class Test_AssertObject:
+class TestAssertObject:
     # 为了处理波浪线
     @staticmethod
     def assert_in(assert_value, assert_obj):
@@ -72,7 +71,7 @@ class Test_AssertObject:
         assert value1 == value2[::-1], f"预期 {value1} 和 {value2} 是相反的列表，但实际不是。"
 
 
-class Test_KeyWords:
+class TestKeyWords:
     @staticmethod
     def random_choice(value):
         return random.choice(value)
@@ -133,4 +132,5 @@ def test():
     caps["appium:connectHardwareKeyboard"] = True
 
     driver = webdriver.Remote("http://127.0.0.1:4723", caps)
-    Test_KeyWords.action_chains_pointer_down(driver, "100,100,0.1")
+    TestKeyWords.action_chains_pointer_down(driver, "100,100,0.1")
+    driver.find_element("id", "com.zhao.myreader:id/tv_chapter_title").get_attribute("text")

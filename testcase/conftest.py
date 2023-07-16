@@ -6,7 +6,7 @@ from appium.options.ios import XCUITestOptions
 from appium.webdriver.appium_service import AppiumService
 from appium.webdriver.common.appiumby import AppiumBy
 
-from actuator.context import Test_Context
+from actuator.context import TestContext
 from config import Config
 from server.atxApi import AtxByCF
 
@@ -49,13 +49,14 @@ def android_driver(android_options, appium_service, atx, conf):
     _android_driver = None
     try:
         _android_driver = user_device(android_options, atx, conf)
-        setattr(Test_Context, "driver", _android_driver)
+        setattr(TestContext, "driver", _android_driver)
         yield _android_driver
     except Exception as e:
         print(e)
     finally:
         release_device(_android_driver, atx, conf)
         print(f"释放设备；{conf.atxdevice} 成功")
+
 
 def ios_driver(ios_options, appium_service, atx, conf):
     pass
