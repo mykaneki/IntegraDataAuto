@@ -6,6 +6,7 @@ from openpyxl import load_workbook
 class Excel:
     def __init__(self, excel_path):
         self.excel_path = excel_path
+        self.sheet_name = None
 
     def read_case_excel(self, sheet_name):
         '''
@@ -13,6 +14,7 @@ class Excel:
         :param sheet_name:
         :return: 测试用例列表，每个元素为一个字典，字典的键为表头，值为单元格的值
         '''
+        self.sheet_name = sheet_name
         try:
             # 加载现有的工作簿
             excel_obj = load_workbook(self.excel_path)
@@ -40,6 +42,7 @@ class Excel:
         :param sheet_name: 配置文件工作表名称
         :return: 配置数据字典
         '''
+        self.sheet_name = sheet_name
         try:
             # 加载现有的工作簿
             excel_obj = load_workbook(self.excel_path)

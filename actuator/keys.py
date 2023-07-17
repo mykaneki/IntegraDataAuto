@@ -8,13 +8,16 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 
 
+# 定义一个断言类，提供各种常用断言方法
 class TestAssertObject:
     # 为了处理波浪线
     @staticmethod
+    # 断言 value 在 obj 中
     def assert_in(assert_value, assert_obj):
         assert assert_value in assert_obj, f"{assert_value}不存在于{assert_obj}"
 
     @staticmethod
+    # 断言 value 在 obj 的一部分中
     def assert_in_one_local(assert_value, assert_obj):
         string_ = ""
         for i in assert_obj:
@@ -22,46 +25,57 @@ class TestAssertObject:
         assert assert_value in string_, f"{assert_value}不存在于{assert_obj}"
 
     @staticmethod
+    # 断言两个值相等
     def assert_equal(value1, value2):
         assert value1 == value2, f"{value1}不等于{value2}"
 
     @staticmethod
+    # 断言两个值不相等
     def assert_not_equal(value1, value2):
         assert value1 != value2, f"{value1}等于{value2}"
 
     @staticmethod
+    # 断言某个值为真
     def assert_true(value):
         assert value, f"预期 {value} 为真，但实际不是。"
 
     @staticmethod
+    # 断言某个值为假
     def assert_false(value):
         assert not value, f"预期 {value} 为假，但实际不是。"
 
     @staticmethod
+    # 断言两个值是同一个对象
     def assert_is(value1, value2):
         assert value1 is value2, f"预期 {value1} 和 {value2} 是同一对象，但实际不是。"
 
     @staticmethod
+    # 断言两个值不是同一个对象
     def assert_is_not(value1, value2):
         assert value1 is not value2, f"预期 {value1} 和 {value2} 不是同一对象，但实际是。"
 
     @staticmethod
+    # 断言某个值为 None
     def assert_is_none(value):
         assert value is None, f"预期 {value} 为 None，但实际不是。"
 
     @staticmethod
+    # 断言某个值不为 None
     def assert_is_not_none(value):
         assert value is not None, f"预期 {value} 不为 None，但实际是。"
 
     @staticmethod
+    # 断言某个值不在某个容器中
     def assert_not_in(value, container):
         assert value not in container, f"预期 {value} 不在 {container} 中，但实际在。"
 
     @staticmethod
+    # 断言某个值是某个类的实例
     def assert_is_instance(value, cls):
         assert isinstance(value, cls), f"预期 {value} 是 {cls} 的实例，但实际不是。"
 
     @staticmethod
+    # 断言某个值不是某个类的实例
     def assert_not_is_instance(value, cls):
         assert not isinstance(value, cls), f"预期 {value} 不是 {cls} 的实例，但实际是。"
 
@@ -71,12 +85,15 @@ class TestAssertObject:
         assert value1 == value2[::-1], f"预期 {value1} 和 {value2} 是相反的列表，但实际不是。"
 
 
+# 定义一个关键字类，提供各种方法
 class TestKeyWords:
     @staticmethod
+    # 从给定的序列中随机选择一个元素
     def random_choice(value):
         return random.choice(value)
 
     @staticmethod
+    # 执行一个触摸屏动作，包括移动到指定位置，按下，暂停，释放
     def action_chains_pointer_down(driver, value):
         try:
             value_list = value.split(',')
@@ -94,6 +111,7 @@ class TestKeyWords:
         actions.perform()
 
     @staticmethod
+    # 存储目录列表，并返回
     def store_directories(driver):
         directories_list = []
         while True:

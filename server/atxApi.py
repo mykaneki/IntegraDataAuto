@@ -1,5 +1,6 @@
 import random
 import time
+from json import JSONDecodeError
 
 from requests import get, post, delete
 
@@ -126,7 +127,12 @@ class AtxByCF:
     # 获取随机的可用设备
     def get_one_device_by_random_choice(self, token):
         devices = list()
-        all_devices = self.get_devices(token).get("devices", None)
+        try:
+            all_devices = self.get_devices(token).get("devices", None)
+        except JSONDecodeError as e:
+            print("获取设备信息失败，可能秘钥错误、设备不存在")
+            print(e)
+            exit(1)
         if all_devices:
             for i in all_devices:
                 # print(f"得到的所有的i:{i}")
@@ -145,7 +151,6 @@ class AtxByCF:
 
     def get_remote_info(self, token, device):
         result_data = self.get_one_devices_has_sources(token, device)
-        print(result_data)
         platform = result_data["device"]["platform"]
         version = result_data["device"]["properties"]["version"]
         sources = result_data["device"]["sources"]

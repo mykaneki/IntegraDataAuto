@@ -81,6 +81,9 @@ class Config:
         return appiumhost, appiumport, appiumbasepath
 
 
+
+
+
 if __name__ == '__main__':
     config = Config('./excel/data/data.xlsx')
     print(config.get_atx_config())  # ('http://127.0.0.1:4000', '10f9e684b0ab455980db87f61a4d7d93')
