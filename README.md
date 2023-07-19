@@ -13,7 +13,7 @@ IntegraDataAuto是一个基于ATXServer2设计的移动设备自动化测试框�
 
 ​		该框架易于维护和扩展，目前已支持Android测试场景，未来将继续扩展对iOS和Web应用的自动化测试支持。
 
-![演示视频](./README.assets/项目演示.mp4)
+![演示视频](./README.assets/项目演示.gif)
 
 ## 快速上手
 
