@@ -98,7 +98,7 @@ def release_device(android_driver, atx, conf):
 
 
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):  # 注意这里我们没有 android_driver 参数
+def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
     extra = getattr(report, "extra", [])
@@ -106,12 +106,11 @@ def pytest_runtest_makereport(item, call):  # 注意这里我们没有 android_d
         print("⽤例执⾏结果:", report.outcome)
     if report.outcome != "passed":
         """失败截图数据"""
-        # 从 item 获取 android_driver
-        # android_driver = getattr(TestContext, "android_driver", None)
-        if android_driver is not None:
-            print("添加截图")
-            extra.append(_extras.image(getattr(TestContext,'driver').get_screenshot_as_base64()))
-            report.extra = extra
+        # android_driver = getattr(item, "android_driver", None)  # 从 item.node 获取 android_driver
+        # if android_driver is not None:
+        extra.append(_extras.image(getattr(TestContext,'driver').get_screenshot_as_base64()))
+        print("添加截图")
+        report.extra = extra
 
 
 def pytest_addoption(parser):

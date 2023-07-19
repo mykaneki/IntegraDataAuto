@@ -151,9 +151,12 @@ class AtxByCF:
 
     def get_remote_info(self, token, device):
         result_data = self.get_one_devices_has_sources(token, device)
-        platform = result_data["device"]["platform"]
-        version = result_data["device"]["properties"]["version"]
-        sources = result_data["device"]["sources"]
+        try:
+            platform = result_data["device"]["platform"]
+            version = result_data["device"]["properties"]["version"]
+            sources = result_data["device"]["sources"]
+        except KeyError:
+            raise KeyError("请查看设备序列是否填写正确")
         sources_id = list(sources.keys())[0]  # 可以取到这个键名
         remote_connect_address = sources.get(sources_id).get("remoteConnectAddress")
         return {

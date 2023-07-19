@@ -3,6 +3,8 @@ import inspect
 import logging
 import os
 
+from selenium.common import TimeoutException
+
 from actuator.context import TestContext
 from excel.readExcel import Excel
 from appium.webdriver.webelement import WebElement
@@ -37,7 +39,10 @@ def mylogging(sheet_name):
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
 
-    return logger
+    yield logger
+    # 关闭 FileHandler 和 StreamHandler
+    file_handler.close()
+    stream_handler.close()
 
 
 def setattr_(name, value):
@@ -91,7 +96,10 @@ def my_find_action(driver, wait, action_type, selector, selector_value):
         element = driver_func(driver, action_type, locator)
     else:
         locator = (selector, selector_value)
-        element = wait.until(getattr(ec, action_type)(locator))
+        try:
+            element = wait.until(getattr(ec, action_type)(locator))
+        except TimeoutException:
+            raise TimeoutException(f"等待超时，找不到元素：{locator}")
     return element
 
 
@@ -122,7 +130,7 @@ def click(driver_name, action, row_num, logger):
 def find_and_click(driver_name, wait, action_type, selector, selector_value, element_name, row_num, logger):
     """
     找到一个元素并点击它
-    :param driver_name: str, 驱动器的名称，例如"Selenium"或"Appium"
+    :param driver_name: str, 驱动器的名称
     :param wait: WebDriverWait, 当前使用的等待器，用于等待页面元素加载
     :param action_type: str, 操作类型，例如"find_element"
     :param selector: str, 选择器类型，例如"id"或"class name"
@@ -133,7 +141,7 @@ def find_and_click(driver_name, wait, action_type, selector, selector_value, ele
     :raises ValueError: 如果action_type是"find_elements"，因为这个函数不支持查找多个元素并点击
     """
     logger.info(
-        f"正在执行第{row_num}行，{element_name}={driver_name}.{action_type}('{selector}', '{selector_value}').click()")
+        f"正在执行第{row_num}行，{element_name}={driver_name}.{action_type}('{selector}', '{selector_value}')\n{element_name}.click()")
     check_value_and_raise(row_num, element_name and selector and selector_value, '元素命名或选择器或选择器的值')
     if 'elements' in action_type:
         raise ValueError(f"第{row_num}行的方式为find_elements，不支持 find_and_click")
@@ -163,8 +171,8 @@ def find_in_elm(driver_name, wait_time, action_type, selector, selector_value, e
     logger.info(
         f"正在执行第{row_num}行，{element_name}={driver_name}.{action_type}('{selector}', '{selector_value}')")
     # 元素命名
-    check_value_and_raise(row_num, element_name and selector and selector_value, '元素命名或选择器或选择器的值')
-    if hasattr(TestContext, element_name):
+    check_value_and_raise(row_num, driver_name and element_name and selector and selector_value, '操作的对象名或元素命名或选择器或选择器的值')
+    if hasattr(TestContext, driver_name):
         if action_type in ["find_element", "find_elements"]:
             # 操作对象为已定义元素
             locator = {'by': selector, 'value': selector_value}
@@ -174,6 +182,8 @@ def find_in_elm(driver_name, wait_time, action_type, selector, selector_value, e
             wait = WebDriverWait(getattr_(driver_name), wait_time)
             setattr(TestContext, element_name,
                     wait.until(getattr(ec, action_type)(locator)))
+    else:
+        raise ValueError(f"第{row_num}行的操作对象{driver_name}在TestContext中未找到")
 
 
 def send_keys(driver_name, action, action_value, row_num, logger):
@@ -186,7 +196,7 @@ def send_keys(driver_name, action, action_value, row_num, logger):
     :param row_num: 行号，用于错误提示。
     """
     logger.info(f"正在执行第{row_num}行，{driver_name}.{action}({action_value})")
-    check_value_and_raise(row_num, driver_name, '操作对象')
+    check_value_and_raise(row_num, driver_name and action_value, '操作对象或操作的值')
     driver_func(driver_name, action, action_value)
 
 
@@ -211,6 +221,7 @@ def get_attribute_(driver_name, element_name, action, action_value, row_num, log
             setattr_(element_name, (getattr(i, action_value) for i in elm_obj))
     except Exception as e:
         logger.error(f"{e}\n没有找到元素{elm_obj}或元素没有属性{action_value}，行号：{row_num}")
+        raise e
 
 
 def get_assert_value(driver_name, assert_value):
@@ -377,7 +388,7 @@ def actuator(sheet_name, excel_path):
     :param sheet_name: Excel 工作表名称，包含测试步骤。从@pytest.mark.parametrize("sheet_name", get_all_test_sheet_name(excel_path))获取。
     :param excel_path: 测试用例的 Excel 文件路径。
     """
-    logger = mylogging(sheet_name)
+    logger = next(mylogging(sheet_name))
     # 获取测试设备及driver
     driver = getattr(TestContext, "driver")
     wait_time = 5
@@ -385,16 +396,18 @@ def actuator(sheet_name, excel_path):
     # 获取测试用例
     excel = Excel(excel_path)
     test_case_data = excel.read_case_excel(sheet_name)
+
     for index, i in enumerate(test_case_data):
-        action = i.get('操作') or None
-        action_type = i.get("方式") or None
-        selector = i.get('选择器') or None
-        selector_value = i.get('定位元素的值') or None
-        element_name = i.get('给获取到的元素命名') or None
-        driver_name = i.get('操作的对象') or 'driver'
-        action_value = i.get('操作的值') or None
-        assert_type = i.get('断言类型') or None
-        assert_value = i.get('断言的值') or None
+        keys = list(i.keys())
+        action = i.get(keys[0]) or None
+        action_type = i.get(keys[1]) or None
+        selector = i.get(keys[2]) or None
+        selector_value = i.get(keys[3]) or None
+        element_name = i.get(keys[4]) or None
+        driver_name = i.get(keys[5]) or 'driver'
+        action_value = i.get(keys[6]) or None
+        assert_type = i.get(keys[7]) or None
+        assert_value = i.get(keys[8]) or None
         row_num = index + 1  # 索引从0开始，所以加1
         # 执行操作
         # find,click,find_and_click,send_keys,get_attribute_,assert,page_source

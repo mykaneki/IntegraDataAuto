@@ -24,12 +24,12 @@ class Excel:
             print(f'读取测试用例文件失败：{e}')
             return
         # 读取表头作为字典的键
-        headers = [cell.value for cell in ws[2]]
+        headers = [cell.value for cell in ws[1]]
         # 读取数据
         data = []
         # ws.iter_rows(min_row=2) 方法用于遍历工作表中的每一行。其中，min_row=2 参数表示从第二行开始遍历。
         # values_only：指定是否只返回单元格中的值。如果设置为 True，则该方法将只返回单元格中的值；否则，它将返回单元格对象。
-        for row in ws.iter_rows(min_row=3, values_only=True):
+        for row in ws.iter_rows(min_row=2, values_only=True):
             record = {}
             for header, value in zip(headers, row):
                 record[header] = value
