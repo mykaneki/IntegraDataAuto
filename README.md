@@ -13,7 +13,7 @@ IntegraDataAuto是一个基于ATXServer2设计的移动设备自动化测试框�
 
 ​		该框架易于维护和扩展，目前已支持Android测试场景，未来将继续扩展对iOS和Web应用的自动化测试支持。
 
-
+![演示视频](./README.assets/项目演示.mp4)
 
 ## 快速上手
 
@@ -82,7 +82,7 @@ pytest xxx.py --html=report.html -v
 
    （详见参数说明）
 
-   ![image-20230718095324291](D:/project/cloneproject/keyword_testing_framework/README.assets/image-20230718095324291.png)
+   ![image-20230718095324291](./README.assets/image-20230718095324291.png)
 
 3. 编写测试用例
 
@@ -151,7 +151,7 @@ pytest xxx.py --html=report.html -v
 
    来源：表
    
-   ![image-20230719085503171](D:/project/cloneproject/keyword_testing_framework/README.assets/image-20230719085503171.png)
+   ![image-20230719085503171](./README.assets/image-20230719085503171.png)
    
    代码：
    
@@ -195,7 +195,7 @@ pytest xxx.py --html=report.html -v
 
    以下均为代码内置的，复制后可以在 Excel 表格中设置下拉选项（如图）。
 
-   ![image-20230719120959756](D:/project/cloneproject/keyword_testing_framework/README.assets/image-20230719120959756.png)
+   ![image-20230719120959756](./README.assets/image-20230719120959756.png)
 
    操作：
 
@@ -314,4 +314,4 @@ action_map = {
 
 修改 windows 系统的编码
 
-![image-20230718183535254](D:/project/cloneproject/keyword_testing_framework/README.assets/image-20230718183535254.png)
+![image-20230718183535254](./README.assets/image-20230718183535254.png)
