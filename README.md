@@ -13,6 +13,8 @@ IntegraDataAuto是一个基于ATXServer2设计的移动设备自动化测试框�
 
 ​		该框架易于维护和扩展，目前已支持Android测试场景，未来将继续扩展对iOS和Web应用的自动化测试支持。
 
+<img src="./README.assets/IntegraDataAuto.png" alt="整体介绍"  /> 
+
 ![演示视频](./README.assets/项目演示.gif)
 
 ## 快速上手
@@ -307,6 +309,14 @@ action_map = {
 >                startswith_(driver_name, action, action_value, element_name, row_num, logger)
 >                continue
 >    ```
+
+## todo list
+
+- [ ] 支持用例执行前置后置
+- [ ] 支持 allure 报告
+- [ ] 支持 IOS 
+- [ ] 支持 web 
+- [ ] 支持 web 和 APP 上下文切换（用于 APP 里面存在 web 的情况）
 
 ## 常见问题
 
