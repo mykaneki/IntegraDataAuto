@@ -310,14 +310,6 @@ action_map = {
 >                continue
 >    ```
 
-## todo list
-
-- [ ] 支持用例执行前置后置
-- [ ] 支持 allure 报告
-- [ ] 支持 IOS 
-- [ ] 支持 web 
-- [ ] 支持 web 和 APP 上下文切换（用于 APP 里面存在 web 的情况）
-
 ## 常见问题
 
 ###  报告是乱码
